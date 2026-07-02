@@ -3,8 +3,17 @@
 import os
 from PIL import Image
 
-def convert_webp(img_abspath:str, name:str, path_to_dir:str):
+def convert_webp(img_abspath:str, name:str, path_to_dir:str=None):
     """Utility method to handle the .webp images"""
+
+    if path_to_dir is None:
+        fol = os.path.dirname(img_abspath)
+
+        path_to_dir = os.path.join("/temp/", fol)
+        path_to_dir = os.path.abspath(path_to_dir)
+
+    if not os.path.exists(path_to_dir):
+        os.makedirs(path_to_dir)
 
     image = Image.open(img_abspath).convert("RGB")
     relative_path = os.path.join(path_to_dir, name.split(".")[0] + ".jpg")
@@ -23,11 +32,34 @@ def clean_cache(folder_path:str, clean_all:bool=False):
     
     for file in os.listdir(folder_path):
 
-        if file.endswith(".jpg") or file.endswith(".png") or file.endswith(".jpeg")\
-            or (file.endswith("webp") and clean_all):
+        if file.endswith("jpg") or (file.endswith(".webp") or file.endswith(".png") or\
+                                     file.endswith(".jpeg") and clean_all):
 
             del_path = os.path.join(folder_path, file)
             os.remove(del_path)
+
+def clean_temp():
+    """Utility method to clean conversion cache on /temp"""
+
+    temp = os.path.abspath("/temp")
+
+    if os.path.exists(temp):
+
+        for file in os.listdir(temp):
+
+            ab_p = os.path.join(temp, file)
+
+            if os.path.isdir(ab_p):
+                clean_cache(ab_p, True)
+            else:
+                os.remove(ab_p)
+        
+        try:
+            os.rmdir(temp)
+        
+        except OSError as e:
+            pass
+    
 
 def extract_imgs(path_to:str):
     """Utility method to extract the images of a given folder"""

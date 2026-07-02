@@ -32,16 +32,8 @@ class ManualConversionTask (ConversionTask):
     """Dataclass that serves as a container for building custom and manual tasks"""
 
     destination_folder:str
-    imgs: list[str] #List to save img's paths
+    files: list[str] #List to save img's paths
     mode = "manual"
-
-@dataclass
-class MergeConversionTask(ConversionTask):
-    """Dataclass that serves as a container to manage the merge tasks"""
-
-    destination_folder:str
-    merges:list[str]
-    mode = "merge"
 
 class TaskManager:
     """Class that manages the logic for conversions, using utility functions from utils"""
@@ -88,6 +80,9 @@ class TaskManager:
 
         f_name = os.path.join(dest_path, final_name)
 
+        if os.path.exists(f_name):
+            pass
+
         with open(f_name, "wb") as final_pdf:
             final_pdf.write(img2pdf.convert(imgs))
 
@@ -100,16 +95,16 @@ class TaskManager:
     def __manualconvert__(self, task:ManualConversionTask):
         """Method to manage the manual conversion tasks"""
 
-        self.__convert_pdf__(task.final_name, task.imgs, task.destination_folder)
+        self.__convert_pdf__(task.final_name, task.files, task.destination_folder)
     
-    def __merge__(self, task:MergeConversionTask):
+    def __merge__(self, task:ManualConversionTask):
         """Method to merge pdf files"""
 
         f_name = os.path.join(task.destination_folder, task.final_name)
 
         with PdfWriter(f_name) as final_pdf:
 
-            for pdf in task.merges:
+            for pdf in task.files:
                 with PdfReader(pdf) as current:
 
                     final_pdf.append(current)
