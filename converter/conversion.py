@@ -38,15 +38,7 @@ class ManualConversionTask (ConversionTask):
 class TaskManager:
     """Class that manages the logic for conversions, using utility functions from utils"""
 
-    task_queue = []
-
-    def __init__(self, final_folder:str):
-        """Constructor for the Class"""
-
-        if not os.path.isdir(final_folder):
-            self.destination_folder = os.path.abspath("")
-        else:
-            self.destination_folder = final_folder
+    task_queue:list[ConversionTask] = []
     
     def show_queue(self):
         """Getter method to see the task queue"""
@@ -93,9 +85,11 @@ class TaskManager:
         self.__convert_pdf__(task.final_name, imgs, task.folder_path)
     
     def __manualconvert__(self, task:ManualConversionTask):
-        """Method to manage the manual conversion tasks"""
+        """Method to manage the manual conversion tasks""" 
 
-        self.__convert_pdf__(task.final_name, task.files, task.destination_folder)
+        imgs = self.__convert_list__(task)
+
+        self.__convert_pdf__(task.final_name, imgs, task.destination_folder)
     
     def __merge__(self, task:ManualConversionTask):
         """Method to merge pdf files"""
@@ -108,6 +102,24 @@ class TaskManager:
                 with PdfReader(pdf) as current:
 
                     final_pdf.append(current)
+            
+            final_pdf.write(f_name)
+    
+    def __convert_list__(self, task:ManualConversionTask):
+        """Method to convert the .webp images when conversion starts"""
+
+        imgs = task.files
+        final_imgs = []
+
+        for img in imgs:
+            name = os.path.basename(img)
+
+            if name.endswith(".webp"):
+                img = utils.convert_webp(img, name, os.path.dirname(img))
+            
+            final_imgs.append(img)
+        
+        return final_imgs
         
     
     def process_queue(self):
@@ -115,16 +127,14 @@ class TaskManager:
 
         for task in self.task_queue:
 
-            match(task.mode is str):
-
-                case "auto":
-                    self.__autoconvert__(task)
-                    break
-
-                case "manual":
-                    self.__manualconvert__(task)
-                    break
-                
-                case "merge":
-                    self.__merge__(task)
-                    break
+            if task.mode == "auto":
+                self.__autoconvert__(task)
+            
+            elif task.mode == "merge":
+                self.__merge__(task)
+            
+            elif task.mode == "manual":
+                self.__manualconvert__(task)
+            
+            else: 
+                continue

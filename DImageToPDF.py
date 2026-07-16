@@ -1,7 +1,12 @@
 """This is the user interface for the program, that will use the logic from the main class
 ConversionManager"""
 
-import customtkinter
-from converter.conversion import ConversionManager
+import _tkinter
+import tkinter as tk
+import customtkinter as ctk
+from converter.conversion import TaskManager
 from converter import utils
-from converter.task_builders import ManualTaskBuilder, MergeTaskBuilder, AutoTaskBuilder, NonReadyTaskException
+from gui.app import DImage
+
+app = DImage()
+app.mainloop()

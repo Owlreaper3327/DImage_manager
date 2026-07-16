@@ -22,7 +22,7 @@ class ManualTaskBuilder:
         Throws NonReadyTaskException if the required task doesn't have
         all the required data to work"""
 
-        if self.task.files.count() == 0:
+        if self.task.files == []:
             raise NonReadyTaskException("There's no images selected to convert")
 
         if not self.__ispathvalid__():
@@ -41,15 +41,7 @@ class ManualTaskBuilder:
             
             raise AttributeError("The given file is not a valid image file")
 
-        if file.endswith(".webp"):
-
-            name = file.split("/")[-1]
-
-            n_path = utils.convert_webp(file, name)
-
-            self.__append_img__(n_path)
-        else:
-            self.__append_img__(file)
+        self.__append_file__(file)
 
     def __ispathvalid__(self):
         """Little flag method to validate name and folder"""
@@ -81,20 +73,15 @@ class ManualTaskBuilder:
 
         name_s = sanitize_filename(new_name)
 
-        self.task.final_name = name_s
+        if not name_s.endswith(".pdf"):
+            name_s = name_s + ".pdf"
 
-        if not self.__ispathvalid__():
-            self.task.final_name = None
-            raise AttributeError("Non valid name provided")
+        self.task.final_name = name_s
 
     def set_destination_folder(self, new_path:str):
         """Setter method for destination folder"""
 
         self.task.destination_folder = new_path
-
-        if not self.__ispathvalid__():
-            self.task.destination_folder = None
-            raise AttributeError("The provided path is not valid")
     
     def __get_final_name__(self):
         """Getter method for task final name"""
@@ -143,53 +130,12 @@ class MergeTaskBuilder(ManualTaskBuilder):
 
         if not self.__ispathvalid__():
             raise NonReadyTaskException("The given filename is not valid")
+
+        t_n = 0
+        for a in self.get_files():
+            t_n += 1
         
-        if self.get_files().count() <= 1:
-            raise NonReadyTaskException("You cannot merge a single document")
-        
-        return self.task
+        if t_n <= 1:
+            raise NonReadyTaskException("You cannot merge one or zero documents")
 
-class AutoTaskBuilder:
-    """Class that builds the automatic conversion task"""
-
-    task:AutoConversionTask
-
-    def __init__(self):
-
-        task = AutoConversionTask(None, "auto", None)
-    
-    def set_folder_path(self, path:str):
-        """Method to define the path to be converted"""
-
-        if not os.path.exists(path):
-            raise AttributeError("The given path doesn't exists")
-        
-        if not os.path.isdir(path):
-            raise AttributeError("The given path it's not a folder")
-        
-        path_s = sanitize_filepath(path, validate_after_sanitize=True)
-        
-        self.task.folder_path = path_s
-    
-    def set_custom_name(self, name:str):
-        """Method to set a custom name for the final document"""
-
-        if not name.endswith(".pdf"):
-            name_s = name + ".pdf"
-        
-        name_s = sanitize_filename(name, validate_after_sanitize=True)
-
-        self.task.final_name = name_s
-    
-    def get_task(self) -> AutoConversionTask:
-        """Returns the requested automatic conversion task"""
-
-        full = os.path.join(self.task.folder_path, self.task.final_name)
-
-        if not is_valid_filepath(full):
-            raise NonReadyTaskException("Provided file path is not valid")
-        
-        if os.path.exists(full):
-            raise NonReadyTaskException("The given file already exists")
-        
         return self.task
