@@ -22,7 +22,7 @@ class AutoConversionTask (ConversionTask):
     mode = "auto"
 
     def __str__(self):
-        return f"{self.final_name} to be converted from {self.folder_path}"
+        return f"{self.final_name} to be auto-converted from {self.folder_path}"
 
     def __format__(self, format_spec):
         return f"{str(self):{format_spec}}"
@@ -34,6 +34,15 @@ class ManualConversionTask (ConversionTask):
     destination_folder:str
     files: list[str] #List to save img's paths
     mode = "manual"
+
+    def __str__(self):
+        if self.mode == "manual":
+            return f"{self.final_name} to be converted to {self.destination_folder}"
+        else:
+            return f"{self.final_name} to be merged on {self.destination_folder}"
+
+    def __format__(self, format_spec):
+        return f"{str(self):{format_spec}}" 
 
 class TaskManager:
     """Class that manages the logic for conversions, using utility functions from utils"""
@@ -59,12 +68,15 @@ class TaskManager:
         task = AutoConversionTask(name, "auto", path_to_folder)
 
         self.task_queue.append(task)
+        return task
     
     def add_other_task(self, task:ConversionTask):
         """Generic method to add miscellaneuos tasks that 
         are built outside the ConversionManager"""
 
-        if isinstance(task, ConversionTask):
+        if isinstance(task, ConversionTask) and\
+            task not in self.task_queue:
+
             self.task_queue.append(task)
     
     def __convert_pdf__(self, final_name:str, imgs:list[str], dest_path:str):
@@ -120,21 +132,35 @@ class TaskManager:
             final_imgs.append(img)
         
         return final_imgs
-        
-    
-    def process_queue(self):
-        """Method to perform all the queued tasks"""
+            
+    def process_first(self) -> bool:
+        """Method to perform the first of all the queued task
+        Alternative for generator (that shit broke my app for some reason)"""
 
-        for task in self.task_queue:
+        task:ConversionTask
+
+        if len(self.task_queue) > 0:
+            task = self.task_queue.pop(0)
 
             if task.mode == "auto":
                 self.__autoconvert__(task)
+                return True
             
             elif task.mode == "merge":
                 self.__merge__(task)
+                return True
             
             elif task.mode == "manual":
                 self.__manualconvert__(task)
-            
-            else: 
-                continue
+                return True
+        
+        return False
+
+
+        
+    
+    def remove_from_queue(self, value:ConversionTask):
+        """Method to remove from the task_queue"""
+
+        if value in self.task_queue:
+            self.task_queue.remove(value)

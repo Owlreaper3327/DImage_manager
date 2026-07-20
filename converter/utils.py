@@ -86,3 +86,23 @@ def extract_imgs(path_to:str):
     
     imgs.sort()
     return imgs
+
+def extract_queue(dest_folder:str) -> list[str]:
+    """Utility method to extract folders to create auto tasks"""
+
+    if not os.path.exists(dest_folder):
+        raise FileNotFoundError("The given path doesn't exists")
+
+    if not os.path.isdir(dest_folder):
+        raise FileNotFoundError("The given path doesn't leads to a folder")
+    
+    tasks = []
+    
+    for file in os.listdir(dest_folder):
+
+        full = os.path.join(dest_folder, file)
+
+        if os.path.isdir(full):
+            tasks.append(full)
+    
+    return tasks

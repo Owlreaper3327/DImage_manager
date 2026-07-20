@@ -6,7 +6,7 @@ import tkinter as tk
 import customtkinter as ctk
 from converter.conversion import TaskManager
 from converter import utils
-from gui.app import DImage
+from gui.app_main_gui import DImage
 
 app = DImage()
 app.mainloop()
