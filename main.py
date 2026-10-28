@@ -24,6 +24,7 @@ def convert_webp(img, name):
     if not os.path.exists("temp/"):
         os.mkdir("temp")
 
+
     image = Image.open(img).convert("RGB")
     ruta_relativa = os.path.join("temp/", name.split(".")[0] + ".jpg")
     ruta_abs = os.path.abspath(ruta_relativa)

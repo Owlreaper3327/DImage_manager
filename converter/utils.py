@@ -15,6 +15,7 @@ def convert_webp(img_abspath:str, name:str, path_to_dir:str=None):
     if not os.path.exists(path_to_dir):
         os.makedirs(path_to_dir)
 
+
     image = Image.open(img_abspath).convert("RGB")
     relative_path = os.path.join(path_to_dir, name.split(".")[0] + ".jpg")
     abs_path = os.path.abspath(relative_path)

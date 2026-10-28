@@ -2,6 +2,9 @@
 
 import customtkinter as ctk
 import os
+
+import function
+
 from converter.conversion import TaskManager
 from converter.task_builders import AutoTaskBuilder, ManualTaskBuilder, MergeTaskBuilder, \
     NonReadyTaskException

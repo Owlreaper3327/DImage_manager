@@ -14,6 +14,7 @@ queue = TaskManager()
 
 COMMANDS = {}
 
+
 def create_merge(mode = "merge"):
 
     file = ""

@@ -110,6 +110,7 @@ class MergeTaskBuilder(ManualTaskBuilder):
     def __init__(self):
 
         self.task = ManualConversionTask(None, "merge", None, [])
+
     
 
     #Override
@@ -139,3 +140,7 @@ class MergeTaskBuilder(ManualTaskBuilder):
             raise NonReadyTaskException("You cannot merge one or zero documents")
 
         return self.task
+
+
+class AutoTaskBuilder:
+    pass

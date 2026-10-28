@@ -45,6 +45,7 @@ class TaskGUI(CTkFrame):
                                width=10, height=10, 
                                text="")
         self.status.pack(side="left")
+
     
 
     def delete_task(self):

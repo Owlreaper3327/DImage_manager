@@ -9,6 +9,7 @@ class AutoTaskWindow(CTkToplevel):
 
     task: AutoConversionTask
 
+
     def __init__(self, master):
         super().__init__()
 
