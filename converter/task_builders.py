@@ -1,9 +1,8 @@
 """Script that contains all the builders for each task"""
 
 import os
-from . import utils
-from .conversion import AutoConversionTask, ManualConversionTask
-from pathvalidate import sanitize_filename, sanitize_filepath, is_valid_filename, is_valid_filepath
+from .conversion import ManualConversionTask
+from pathvalidate import sanitize_filename
 
 class NonReadyTaskException(BaseException):
     """Exception that represents when a task doesn't have the required data"""
@@ -15,30 +14,30 @@ class ManualTaskBuilder:
 
     def __init__(self):
 
-        self.task = ManualConversionTask(None, "manual", None, [])
-    
+        self.task = ManualConversionTask("", "manual", "", [])
+
     def get_task(self):
         """Method that returns a built instance of ManualConversionTask
         Throws NonReadyTaskException if the required task doesn't have
         all the required data to work"""
 
-        if self.task.files == []:
+        if len(self.task.files) == 0:
             raise NonReadyTaskException("There's no images selected to convert")
 
         if not self.__ispathvalid__():
             raise NonReadyTaskException("Invalid path or no path provided")
 
         return self.task
-    
+
     def add_file(self, file:str):
         """Adds a single image to the task"""
 
         if not os.path.exists(file):
             raise AttributeError("The given path doesn'exists")
-        
-        if not (file.endswith(".jpg") or file.endswith(".jpeg")\
+
+        if not (file.endswith(".jpg") or file.endswith(".jpeg")
                 or file.endswith(".png") or file.endswith("webp")):
-            
+
             raise AttributeError("The given file is not a valid image file")
 
         self.__append_file__(file)
@@ -46,7 +45,7 @@ class ManualTaskBuilder:
     def __ispathvalid__(self):
         """Little flag method to validate name and folder"""
 
-        if self.task.final_name is None or self.task.destination_folder is None:
+        if self.task.final_name is "" or self.task.destination_folder is "":
             return False
 
         name = self.__get_final_name__()
@@ -54,10 +53,10 @@ class ManualTaskBuilder:
 
         if not os.path.exists(folder):
             return False
-    
+
         if not os.path.isdir(folder):
             return False
-        
+
         if not name.endswith(".pdf"):
             return False
 
@@ -82,22 +81,22 @@ class ManualTaskBuilder:
         """Setter method for destination folder"""
 
         self.task.destination_folder = new_path
-    
+
     def __get_final_name__(self):
         """Getter method for task final name"""
 
         return self.task.final_name
-    
+
     def __get_dest_fold__(self):
         """Getter method for task destination folder"""
 
         return self.task.destination_folder
-    
+
     def __append_file__(self, file:str):
         """Append shortening method"""
 
         self.task.files.append(file)
-    
+
     def get_files(self):
         """Getter method for imgs in task"""
 
@@ -108,8 +107,8 @@ class MergeTaskBuilder(ManualTaskBuilder):
     """Builder class for MergeConversionTasks"""
 
     def __init__(self):
-
-        self.task = ManualConversionTask(None, "merge", None, [])
+        super().__init__()
+        self.task = ManualConversionTask("", "merge", "", [])
 
     
 

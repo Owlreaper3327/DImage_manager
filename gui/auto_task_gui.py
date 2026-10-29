@@ -44,8 +44,10 @@ class AutoTaskWindow(CTkToplevel):
         self.configure(fg_color=['gray92', 'gray14'])
 
         self.master_d = master
-        self.task = AutoConversionTask(final_name=None, mode="auto", 
-                                       folder_path=None)
+        self.task = AutoConversionTask(final_name="", mode="auto",
+                                       folder_path="")
+
+
     
     def select_folder_callback(self):
         """Callback for select folder button"""
