@@ -173,6 +173,7 @@ class DImage(CTk):
         aut_win = AutoTaskWindow(self)
         aut_win.grab_set()
         aut_win.deiconify()
+        aut_win.focus()
         aut_win.wait_window()
 
     def merge_task(self):

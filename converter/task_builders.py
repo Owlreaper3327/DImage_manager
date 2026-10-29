@@ -45,7 +45,7 @@ class ManualTaskBuilder:
     def __ispathvalid__(self):
         """Little flag method to validate name and folder"""
 
-        if self.task.final_name is "" or self.task.destination_folder is "":
+        if self.task.final_name == "" or self.task.destination_folder == "":
             return False
 
         name = self.__get_final_name__()
