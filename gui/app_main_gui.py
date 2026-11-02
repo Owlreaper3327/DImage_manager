@@ -122,7 +122,7 @@ class DImage(CTk):
 
         if len(self.task_manager.task_queue) > 0:
 
-            asyncio.run(self.tasks_start(), debug=True)
+             asyncio.run(self.tasks_start(), debug=True)
         else:
             msb.showerror("Error", "Task queue is empty")
 

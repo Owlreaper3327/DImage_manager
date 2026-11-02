@@ -9,7 +9,7 @@ def convert_webp(img_abspath:str, name:str, path_to_dir:str=""):
     if path_to_dir is "":
         fol = os.path.dirname(img_abspath)
 
-        path_to_dir = os.path.join("/temp/", fol)
+        path_to_dir = os.path.join("temp", fol)
         path_to_dir = os.path.abspath(path_to_dir)
 
     if not os.path.exists(path_to_dir):

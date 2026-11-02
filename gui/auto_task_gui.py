@@ -81,12 +81,12 @@ class AutoTaskWindow(CTkToplevel):
         folder = self.task.folder_path
         name = self.task.final_name
 
-        if folder is None:
+        if folder == "":
             msb.showerror("Error",
                           "Destination folder must be setted")
             return
 
-        if name is None:
+        if name == "":
             self.master_d.pass_auto(folder)
             self.destroy()
             return
