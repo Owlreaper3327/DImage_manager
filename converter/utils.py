@@ -3,13 +3,13 @@
 import os
 from PIL import Image
 
-def convert_webp(img_abspath:str, name:str, path_to_dir:str=None):
+def convert_webp(img_abspath:str, name:str, path_to_dir:str=""):
     """Utility method to handle the .webp images"""
 
-    if path_to_dir is None:
+    if path_to_dir is "":
         fol = os.path.dirname(img_abspath)
 
-        path_to_dir = os.path.join("/temp/", fol)
+        path_to_dir = os.path.join("temp", fol)
         path_to_dir = os.path.abspath(path_to_dir)
 
     if not os.path.exists(path_to_dir):
@@ -27,13 +27,13 @@ def clean_cache(folder_path:str, clean_all:bool=False):
 
     if not os.path.exists(folder_path):
         raise FileNotFoundError("The path introduced doesn't exists")
-    
+
     if not os.path.isdir(folder_path):
         raise FileExistsError("The requested path is not a folder")
-    
+
     for file in os.listdir(folder_path):
 
-        if file.endswith("jpg") or (file.endswith(".webp") or file.endswith(".png") or\
+        if file.endswith("jpg") or (file.endswith(".webp") or file.endswith(".png") or
                                      file.endswith(".jpeg") and clean_all):
 
             del_path = os.path.join(folder_path, file)
