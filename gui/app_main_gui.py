@@ -8,7 +8,6 @@ from converter import utils
 from gui.auto_task_gui import AutoTaskWindow
 from gui.manual_task_gui import ManualTaskWindow
 
-
 class TaskGUI(CTkFrame):
     """GUI to represent the tasks"""
 
